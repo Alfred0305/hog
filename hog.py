@@ -43,7 +43,13 @@ def free_bacon(score):
     """
     assert score < 100, 'The game should be over.'
     # BEGIN PROBLEM 2
-    sum(for int(degits) in str(score))
+    ones_place = score % 10
+    tens_place = score // 10
+    add_by = 2 * tens_place - ones_place
+    if add_by < 1:
+        return 1
+    else:
+        return add_by
     # END PROBLEM 2
 
 
