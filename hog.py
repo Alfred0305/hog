@@ -67,7 +67,10 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     assert opponent_score < 100, 'The game should be over.'
     # BEGIN PROBLEM 3
-    "*** YOUR CODE HERE ***"
+    if num_rolls > 0:
+        return roll_dice(num_rolls, dice)
+    else:
+        return free_bacon(opponent_score)
     # END PROBLEM 3
 
 
@@ -77,7 +80,7 @@ def is_swap(player_score, opponent_score):
     difference between its last two digits as the opponent's score.
     """
     # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
+    return abs((player_score // 10) % 10 - player_score % 10) == abs((opponent_score // 10) % 10 - opponent_score % 10)
     # END PROBLEM 4
 
 
@@ -96,6 +99,8 @@ def silence(score0, score1):
     """Announce nothing (see Phase 2)."""
     return silence
 
+def swap(first_score, second_score):
+    return second_score, first_score
 
 def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
          goal=GOAL_SCORE, say=silence):
@@ -116,7 +121,23 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     """
     player = 0  # Which player is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+
+    while (score0 < goal) and (score1 < goal):
+        if player == 0:
+            score0 += take_turn(strategy0(score0, score1), score1, dice)
+            if is_swap(score0, score1):
+                score0, score1 = swap(score0, score1)
+            if score0 >= goal:
+                return score0, score1
+            player = other(player)
+        else:
+            score1 += take_turn(strategy1(score1, score0), score0, dice)
+            if is_swap(score1, score0):
+                score1, score0 = swap(score1, score0)
+            if score1 >= goal:
+                return score0, score1
+            player = other(player)
+
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
